@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Employee Management System</title>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", sans-serif;
+    }
+
+    body {
+        min-height: 100vh;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 30px;
+    }
+
+    .app {
+        width: 100%;
+        max-width: 1100px;
+        background: rgba(255,255,255,0.15);
+        backdrop-filter: blur(12px);
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        color: white;
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .form {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+    }
+
+    input {
+        padding: 10px;
+        border-radius: 8px;
+        border: none;
+        outline: none;
+        font-size: 1rem;
+        flex: 1;
+        min-width: 150px;
+    }
+
+    button {
+        background: linear-gradient(135deg, #00c6ff, #0072ff);
+        border: none;
+        padding: 10px 16px;
+        border-radius: 8px;
+        color: white;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    button:hover {
+        transform: scale(1.05);
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    th, td {
+        padding: 12px;
+        text-align: center;
+    }
+
+    th {
+        background: rgba(0,0,0,0.3);
+    }
+
+    tr:hover {
+        background: rgba(255,255,255,0.15);
+    }
+
+    .delete {
+        background: linear-gradient(135deg, #ff4b2b, #ff416c);
+    }
+</style>
+</head>
+
+<body>
+
+<div class="app">
+    <h1>Employee Management System</h1>
+
+    <!-- FORM -->
+    <div class="form">
+        <input type="number" id="id" placeholder="ID (for update only)">
+        <input type="text" id="name" placeholder="Name">
+        <input type="text" id="gender" placeholder="Gender">
+        <input type="number" id="salary" placeholder="Salary">
+
+        <button onclick="addEmployee()">Add</button>
+        <button onclick="updateEmployee()">Update</button>
+        <button onclick="loadEmployees()">Load</button>
+    </div>
+
+    <!-- TABLE -->
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Gender</th>
+            <th>Salary</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody id="empTable"></tbody>
+    </table>
+</div>
+
+<script>
+const baseUrl = "http://localhost:9090/empapi";
+
+window.onload = loadEmployees;
+
+function loadEmployees() {
+    fetch(baseUrl + "/employees")
+        .then(res => res.json())
+        .then(data => {
+            const table = document.getElementById("empTable");
+            table.innerHTML = "";
+
+            data.forEach(emp => {
+                table.innerHTML += `
+                    <tr>
+                        <td>${emp.id}</td>
+                        <td>${emp.name}</td>
+                        <td>${emp.gender}</td>
+                        <td>${emp.salary}</td>
+                        <td>
+                            <button class="del" onclick="deleteEmployee(${emp.id})">✖</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        })
+        .catch(err => console.error(err));
+}
+
+function addEmployee() {
+    const emp = {
+        name: document.getElementById("name").value.trim(),
+        gender: document.getElementById("gender").value.trim(),
+        salary: document.getElementById("salary").value
+    };
+
+    if (!emp.name || !emp.gender || !emp.salary) {
+        alert("All fields are required");
+        return;
+    }
+
+    fetch(baseUrl + "/employee", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(emp)
+    })
+    .then(res => {
+        if (!res.ok) throw new Error("Failed to add employee");
+        return res.json();
+    })
+    .then(() => {
+        clearFields();
+        loadEmployees();
+    })
+    .catch(err => alert(err.message));
+}
+
+function updateEmployee() {
+    const emp = {
+        id: document.getElementById("id").value,
+        name: document.getElementById("name").value.trim(),
+        gender: document.getElementById("gender").value.trim(),
+        salary: document.getElementById("salary").value
+    };
+
+    if (!emp.id || !emp.name || !emp.gender || !emp.salary) {
+        alert("ID and all fields are required for update");
+        return;
+    }
+
+    fetch(baseUrl + "/employee", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(emp)
+    })
+    .then(() => {
+        clearFields();
+        loadEmployees();
+    });
+}
+
+function deleteEmployee(id) {
+    fetch(baseUrl + "/employee/" + id, {
+        method: "DELETE"
+    })
+    .then(() => loadEmployees());
+}
+
+function clearFields() {
+    document.getElementById("id").value = "";
+    document.getElementById("name").value = "";
+    document.getElementById("gender").value = "";
+    document.getElementById("salary").value = "";
+}
+</script>
+
+
+</body>
+</html>
