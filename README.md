@@ -1,19 +1,28 @@
-# Employee Management System
+# Currency Converter Using Spring Boot
 
-A simple and modern **Employee Management System** built using **Spring Boot** with a clean and interactive frontend.  
-This project demonstrates a full **CRUD application** (Create, Read, Update, Delete) for managing employee records.
+A simple and interactive **currency converter application** built using **Spring Boot**.  
+This project allows users to convert currency values from one currency to another using a REST API.
 
 ---
 
-## 🌟 Features
+## 🌍 Overview
 
-✔ Add new employees  
-✔ View all employees  
-✔ Update existing employee  
-✔ Delete employee  
-✔ Clean modern UI with JavaScript frontend  
-✔ REST API built with Spring Boot  
-✔ Uses Fetch API to connect frontend with backend
+This application exposes a REST API that accepts currency amount, source currency, and target currency, and returns the converted amount.
+
+It demonstrates:
+- Building REST APIs with Spring Boot
+- Handling request parameters
+- Simple business logic implementation
+- JSON-based API responses
+
+---
+
+## 💡 Features
+
+✔ Convert amount from one currency to another  
+✔ REST API built using Spring Boot  
+✔ Easy integration with any frontend or client  
+✔ Demonstrates Spring Boot basics & REST concepts
 
 ---
 
@@ -22,48 +31,14 @@ This project demonstrates a full **CRUD application** (Create, Read, Update, Del
 | Layer | Technology |
 |-------|------------|
 | Backend | Java, Spring Boot |
-| Frontend | HTML, CSS, JavaScript |
-| Database | MySQL (or any JDBC-compatible DB) |
-| Tools | Maven, IDE (IntelliJ / Eclipse), Git, GitHub |
+| Build Tool | Maven |
+| API | REST |
+| Data | No external DB required |
 
 ---
 
-## 🧠 Architecture
+## 📌 API Details
 
-Frontend (static HTML + JS)
-↑
-Fetch API Calls
-↓
-Backend (Spring Boot REST Controllers)
-↓
-Service Layer → Repository → Database
+### 🔹 Convert Currency
 
-yaml
-Copy code
-
----
-
-## 🚀 What You Get
-
-✔ `GET /empapi/employees` — Get all employees  
-✔ `GET /empapi/employee/{id}` — Get employee by ID  
-✔ `POST /empapi/employee` — Add new employee  
-✔ `PUT /empapi/employee` — Update existing employee  
-✔ `DELETE /empapi/employee/{id}` — Delete employee by ID
-
----
-
-## 📦 Project Structure
-
-EmployeeManagementSystem/
-│
-├── src/
-│ ├── main/
-│ │ ├── java/… (Backend Code)
-│ │ └── resources/
-│ │ └── static/
-│ │ └── employee.html ← Frontend UI
-│ └── test/
-├── .gitignore
-├── pom.xml
-└── README.md
+**Endpoint:**
